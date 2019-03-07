@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<style>
+#main {
+background-color: grey;
+}
+</style>
+</head>
+<body>  
+<pre></pre>
+
+<div id="main">
+	<ul></ul>
+</div>
+
+<script>
+const main = document.querySelector("#main");
+
+const ul = document.querySelector('ul');
+
+
+const paivaMaara = () => {
+  var d = new Date();
+  var n = d.getDate();
+  console.log("Date: "+n);
+  return n;
+}
+  
+const getRuokaLista = () => {  
+
+paiva = paivaMaara();
+
+let proxyUrl = 'https://cors-anywhere.herokuapp.com/',
+    targetUrl = 'https://www.sodexo.fi/ruokalistat/output/daily_json/16365/2019/03/0'+paiva+'/fi'
+fetch(proxyUrl + targetUrl)
+  .then(blob => blob.json())
+  .then(data => {
+    console.table("JSON:",	data.courses);
+	console.table("JSON:",	data.courses[0].title_fi);
+	console.table("JSON:",	data);
+   // document.querySelector("pre").innerHTML = JSON.stringify(data, null, 2); ALKUPERÄINEN 
+   generoi(data.courses);
+    return data;
+  })
+  .catch(e => {
+    console.log(e);
+    return e;
+  });
+  }
+  
+const generoi = (arr) => {
+
+console.log("haettu lista:",arr);
+
+for(let i=0;i<arr.length; i++){
+	
+	const li = document.createElement('li');
+	li.innerHTML = arr[i].title_fi +" , hinta: " + arr[i].price;
+	ul.appendChild(li);
+}
+
+}  
+
+
+getRuokaLista();
+</script>
+
+</body>
+</html>
